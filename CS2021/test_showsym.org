@@ -1,0 +1,524 @@
+#+TITLE: Tests for showsym
+#+TESTY: PREFIX="showsym"
+#+TESTY: USE_VALGRIND=1
+
+* Check Magic Bytes
+Ensure showsym checks the "magic bytes" which are at beginning of the
+file (in the ELF header). If these bytes don't match the expectation,
+bail out as the file is not an ELF binary file. Tests on the provided
+x.c source file.
+#+TESTY: program='./showsym test-input/x.c'
+#+BEGIN_SRC text
+ERROR: Magic bytes wrong, this is not an ELF file
+#+END_SRC
+
+* x.o Object File
+Runs on the object file 'x.o' which has a few global symbols.
+
+#+TESTY: program='./showsym test-input/x.o'
+#+BEGIN_SRC text
+Symbol Table
+- 168 bytes offset from start of file
+- 240 bytes total size
+- 24 bytes per entry
+- 10 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:     FILE    0 x.c
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:   OBJECT  512 arr
+[  9]:     FUNC   17 func
+#+END_SRC
+
+* coins_funcs.o Object File
+Runs on the object file 'coins_funcs.o' which has a few global
+symbols.
+
+#+TESTY: program='./showsym test-input/coins_funcs.o'
+#+BEGIN_SRC text
+Symbol Table
+- 528 bytes offset from start of file
+- 240 bytes total size
+- 24 bytes per entry
+- 10 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:     FILE    0 coins_funcs.c
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:     FUNC  267 set_coins
+[  9]:     FUNC   91 total_coins
+#+END_SRC
+
+* coins_funcs_asm.o Object File
+Runs on the object file 'coins_funcs_asm.o' which has fewer sections
+but similar globals to the C version.
+
+#+TESTY: program='./showsym test-input/coins_funcs_asm.o'
+#+BEGIN_SRC text
+Symbol Table
+- 168 bytes offset from start of file
+- 168 bytes total size
+- 24 bytes per entry
+- 7 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:  SECTION    0 <NONE>
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:   NOTYPE    0 .OOB
+[  5]:   NOTYPE    0 set_coins
+[  6]:   NOTYPE    0 total_coins
+#+END_SRC
+
+* coins_main.o Object File
+Runs on the object file 'coins_main.o' has a variety of symbols such
+as main() as well as references to library functions defined elsewhere.
+
+#+TESTY: program='./showsym test-input/coins_main.o'
+#+BEGIN_SRC text
+Symbol Table
+- 680 bytes offset from start of file
+- 408 bytes total size
+- 24 bytes per entry
+- 17 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:     FILE    0 coins_main.c
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:  SECTION    0 <NONE>
+[  9]:     FUNC  353 main
+[ 10]:   NOTYPE    0 _GLOBAL_OFFSET_TABLE_
+[ 11]:   NOTYPE    0 printf
+[ 12]:   NOTYPE    0 puts
+[ 13]:   NOTYPE    0 atoi
+[ 14]:   NOTYPE    0 set_coins
+[ 15]:   NOTYPE    0 total_coins
+[ 16]:   NOTYPE    0 __stack_chk_fail
+#+END_SRC
+
+* coins_main Executable File
+Runs on the executable 'coins_main' with a much larger symbol table
+than the object files.
+
+#+TESTY: program='./showsym test-input/coins_main'
+#+BEGIN_SRC text
+Symbol Table
+- 5408 bytes offset from start of file
+- 1728 bytes total size
+- 24 bytes per entry
+- 72 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:  SECTION    0 <NONE>
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:  SECTION    0 <NONE>
+[  9]:  SECTION    0 <NONE>
+[ 10]:  SECTION    0 <NONE>
+[ 11]:  SECTION    0 <NONE>
+[ 12]:  SECTION    0 <NONE>
+[ 13]:  SECTION    0 <NONE>
+[ 14]:  SECTION    0 <NONE>
+[ 15]:  SECTION    0 <NONE>
+[ 16]:  SECTION    0 <NONE>
+[ 17]:  SECTION    0 <NONE>
+[ 18]:  SECTION    0 <NONE>
+[ 19]:  SECTION    0 <NONE>
+[ 20]:  SECTION    0 <NONE>
+[ 21]:  SECTION    0 <NONE>
+[ 22]:  SECTION    0 <NONE>
+[ 23]:  SECTION    0 <NONE>
+[ 24]:  SECTION    0 <NONE>
+[ 25]:  SECTION    0 <NONE>
+[ 26]:  SECTION    0 <NONE>
+[ 27]:     FILE    0 init.c
+[ 28]:     FILE    0 crtstuff.c
+[ 29]:     FUNC    0 deregister_tm_clones
+[ 30]:     FUNC    0 register_tm_clones
+[ 31]:     FUNC    0 __do_global_dtors_aux
+[ 32]:   OBJECT    1 completed.6983
+[ 33]:   OBJECT    0 __do_global_dtors_aux_fini_array_entry
+[ 34]:     FUNC    0 frame_dummy
+[ 35]:   OBJECT    0 __frame_dummy_init_array_entry
+[ 36]:     FILE    0 coins_main.c
+[ 37]:     FILE    0 /tmp/cc9YNUqX.o
+[ 38]:   NOTYPE    0 .OOB
+[ 39]:     FILE    0 crtstuff.c
+[ 40]:   OBJECT    0 __FRAME_END__
+[ 41]:     FILE    0 <NONE>
+[ 42]:   NOTYPE    0 __init_array_end
+[ 43]:   OBJECT    0 _DYNAMIC
+[ 44]:   NOTYPE    0 __init_array_start
+[ 45]:   NOTYPE    0 __GNU_EH_FRAME_HDR
+[ 46]:   OBJECT    0 _GLOBAL_OFFSET_TABLE_
+[ 47]:     FUNC    2 __libc_csu_fini
+[ 48]:   NOTYPE    0 _ITM_deregisterTMCloneTable
+[ 49]:   NOTYPE    0 data_start
+[ 50]:     FUNC    0 puts@@GLIBC_2.2.5
+[ 51]:   NOTYPE    0 _edata
+[ 52]:     FUNC    0 _fini
+[ 53]:     FUNC    0 __stack_chk_fail@@GLIBC_2.4
+[ 54]:     FUNC    0 printf@@GLIBC_2.2.5
+[ 55]:     FUNC    0 __libc_start_main@@GLIBC_2.2.5
+[ 56]:   NOTYPE    0 __data_start
+[ 57]:   NOTYPE    0 __gmon_start__
+[ 58]:   OBJECT    0 __dso_handle
+[ 59]:   OBJECT    4 _IO_stdin_used
+[ 60]:   NOTYPE    0 set_coins
+[ 61]:     FUNC  101 __libc_csu_init
+[ 62]:   NOTYPE    0 _end
+[ 63]:     FUNC   43 _start
+[ 64]:   NOTYPE    0 __bss_start
+[ 65]:     FUNC  353 main
+[ 66]:   NOTYPE    0 total_coins
+[ 67]:     FUNC    0 atoi@@GLIBC_2.2.5
+[ 68]:   OBJECT    0 __TMC_END__
+[ 69]:   NOTYPE    0 _ITM_registerTMCloneTable
+[ 70]:     FUNC    0 __cxa_finalize@@GLIBC_2.2.5
+[ 71]:     FUNC    0 _init
+#+END_SRC
+
+* cpp_vector Executable File
+Runs on the executable 'cppvector' which is a compiled C++
+program. Many of the symbols within it are "mangled" names for
+overloaded or class-based functions.
+
+#+TESTY: program='./showsym test-input/cppvector'
+#+BEGIN_SRC text
+Symbol Table
+- 4232 bytes offset from start of file
+- 1896 bytes total size
+- 24 bytes per entry
+- 79 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:  SECTION    0 <NONE>
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:  SECTION    0 <NONE>
+[  9]:  SECTION    0 <NONE>
+[ 10]:  SECTION    0 <NONE>
+[ 11]:  SECTION    0 <NONE>
+[ 12]:  SECTION    0 <NONE>
+[ 13]:  SECTION    0 <NONE>
+[ 14]:  SECTION    0 <NONE>
+[ 15]:  SECTION    0 <NONE>
+[ 16]:  SECTION    0 <NONE>
+[ 17]:  SECTION    0 <NONE>
+[ 18]:  SECTION    0 <NONE>
+[ 19]:  SECTION    0 <NONE>
+[ 20]:  SECTION    0 <NONE>
+[ 21]:  SECTION    0 <NONE>
+[ 22]:  SECTION    0 <NONE>
+[ 23]:  SECTION    0 <NONE>
+[ 24]:  SECTION    0 <NONE>
+[ 25]:  SECTION    0 <NONE>
+[ 26]:     FILE    0 init.c
+[ 27]:     FILE    0 crtstuff.c
+[ 28]:     FUNC    0 deregister_tm_clones
+[ 29]:     FUNC    0 register_tm_clones
+[ 30]:     FUNC    0 __do_global_dtors_aux
+[ 31]:   OBJECT    1 completed.6973
+[ 32]:   OBJECT    0 __do_global_dtors_aux_fini_array_entry
+[ 33]:     FUNC    0 frame_dummy
+[ 34]:   OBJECT    0 __frame_dummy_init_array_entry
+[ 35]:     FILE    0 cppvector.cpp
+[ 36]:   OBJECT    1 _ZStL19piecewise_construct
+[ 37]:   OBJECT    1 _ZStL8__ioinit
+[ 38]:     FUNC   73 _Z41__static_initialization_and_destruction_0ii
+[ 39]:     FUNC   21 _GLOBAL__sub_I__ZN7CVectorplERKS_
+[ 40]:     FILE    0 crtstuff.c
+[ 41]:   OBJECT    0 __FRAME_END__
+[ 42]:     FILE    0 <NONE>
+[ 43]:   NOTYPE    0 __GNU_EH_FRAME_HDR
+[ 44]:   OBJECT    0 _DYNAMIC
+[ 45]:   NOTYPE    0 __init_array_end
+[ 46]:   NOTYPE    0 __init_array_start
+[ 47]:   OBJECT    0 _GLOBAL_OFFSET_TABLE_
+[ 48]:     FUNC   11 _ZN7CVectorC1Ev
+[ 49]:   NOTYPE    0 _edata
+[ 50]:   NOTYPE    0 data_start
+[ 51]:   OBJECT    4 _IO_stdin_used
+[ 52]:     FUNC    0 __cxa_finalize@@GLIBC_2.2.5
+[ 53]:     FUNC  188 main
+[ 54]:     FUNC   11 _ZN7CVectorC2Ev
+[ 55]:   OBJECT    0 __dso_handle
+[ 56]:     FUNC    0 _fini
+[ 57]:     FUNC    0 __cxa_atexit@@GLIBC_2.2.5
+[ 58]:     FUNC   43 _start
+[ 59]:     FUNC    0 __stack_chk_fail@@GLIBC_2.4
+[ 60]:     FUNC    0 _init
+[ 61]:   OBJECT    0 __TMC_END__
+[ 62]:     FUNC    0 _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c@@GLIBCXX_3.4
+[ 63]:     FUNC   36 _ZN7CVectorC2Eii
+[ 64]:   OBJECT  272 _ZSt4cout@@GLIBCXX_3.4
+[ 65]:   NOTYPE    0 __data_start
+[ 66]:   NOTYPE    0 _end
+[ 67]:   NOTYPE    0 __bss_start
+[ 68]:     FUNC    0 _ZNSt8ios_base4InitC1Ev@@GLIBCXX_3.4
+[ 69]:     FUNC  101 __libc_csu_init
+[ 70]:     FUNC   36 _ZN7CVectorC1Eii
+[ 71]:     FUNC    0 _ZNSolsEi@@GLIBCXX_3.4
+[ 72]:   NOTYPE    0 _ITM_deregisterTMCloneTable
+[ 73]:     FUNC    2 __libc_csu_fini
+[ 74]:     FUNC  105 _ZN7CVectorplERKS_
+[ 75]:     FUNC    0 __libc_start_main@@GLIBC_2.2.5
+[ 76]:   NOTYPE    0 __gmon_start__
+[ 77]:   NOTYPE    0 _ITM_registerTMCloneTable
+[ 78]:     FUNC    0 _ZNSt8ios_base4InitD1Ev@@GLIBCXX_3.4
+#+END_SRC
+
+* quote_main Executable File
+Runs on the executable 'quote_main' which is a compiled C program with
+a large-ish symbol table.
+
+#+TESTY: program='./showsym test-input/quote_main'
+#+BEGIN_SRC text
+Symbol Table
+- 13552 bytes offset from start of file
+- 1872 bytes total size
+- 24 bytes per entry
+- 78 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:  SECTION    0 <NONE>
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:  SECTION    0 <NONE>
+[  9]:  SECTION    0 <NONE>
+[ 10]:  SECTION    0 <NONE>
+[ 11]:  SECTION    0 <NONE>
+[ 12]:  SECTION    0 <NONE>
+[ 13]:  SECTION    0 <NONE>
+[ 14]:  SECTION    0 <NONE>
+[ 15]:  SECTION    0 <NONE>
+[ 16]:  SECTION    0 <NONE>
+[ 17]:  SECTION    0 <NONE>
+[ 18]:  SECTION    0 <NONE>
+[ 19]:  SECTION    0 <NONE>
+[ 20]:  SECTION    0 <NONE>
+[ 21]:  SECTION    0 <NONE>
+[ 22]:  SECTION    0 <NONE>
+[ 23]:  SECTION    0 <NONE>
+[ 24]:  SECTION    0 <NONE>
+[ 25]:  SECTION    0 <NONE>
+[ 26]:  SECTION    0 <NONE>
+[ 27]:     FILE    0 init.c
+[ 28]:     FILE    0 crtstuff.c
+[ 29]:     FUNC    0 deregister_tm_clones
+[ 30]:     FUNC    0 register_tm_clones
+[ 31]:     FUNC    0 __do_global_dtors_aux
+[ 32]:   OBJECT    1 completed.6983
+[ 33]:   OBJECT    0 __do_global_dtors_aux_fini_array_entry
+[ 34]:     FUNC    0 frame_dummy
+[ 35]:   OBJECT    0 __frame_dummy_init_array_entry
+[ 36]:     FILE    0 quote_main.c
+[ 37]:     FILE    0 quote_data.c
+[ 38]:     FILE    0 crtstuff.c
+[ 39]:   OBJECT    0 __FRAME_END__
+[ 40]:     FILE    0 <NONE>
+[ 41]:   NOTYPE    0 __init_array_end
+[ 42]:   OBJECT    0 _DYNAMIC
+[ 43]:   NOTYPE    0 __init_array_start
+[ 44]:   NOTYPE    0 __GNU_EH_FRAME_HDR
+[ 45]:   OBJECT    0 _GLOBAL_OFFSET_TABLE_
+[ 46]:     FUNC    2 __libc_csu_fini
+[ 47]:     FUNC    0 putchar@@GLIBC_2.2.5
+[ 48]:   NOTYPE    0 _ITM_deregisterTMCloneTable
+[ 49]:   NOTYPE    0 data_start
+[ 50]:   OBJECT   16 choices_actual
+[ 51]:     FUNC    0 puts@@GLIBC_2.2.5
+[ 52]:     FUNC   60 list_get
+[ 53]:   NOTYPE    0 _edata
+[ 54]:     FUNC    0 _fini
+[ 55]:   OBJECT    8 choices
+[ 56]:     FUNC    0 __stack_chk_fail@@GLIBC_2.4
+[ 57]:     FUNC    0 printf@@GLIBC_2.2.5
+[ 58]:     FUNC    0 __libc_start_main@@GLIBC_2.2.5
+[ 59]:   NOTYPE    0 __data_start
+[ 60]:     FUNC    0 strcmp@@GLIBC_2.2.5
+[ 61]:   NOTYPE    0 __gmon_start__
+[ 62]:     FUNC   11 max_size
+[ 63]:   OBJECT 3960 nodes
+[ 64]:   OBJECT    0 __dso_handle
+[ 65]:   OBJECT    4 _IO_stdin_used
+[ 66]:     FUNC  101 __libc_csu_init
+[ 67]:   NOTYPE    0 _end
+[ 68]:     FUNC   43 _start
+[ 69]:   NOTYPE    0 __bss_start
+[ 70]:     FUNC   30 get_it
+[ 71]:     FUNC  289 main
+[ 72]:     FUNC    0 __isoc99_scanf@@GLIBC_2.7
+[ 73]:   OBJECT    0 __TMC_END__
+[ 74]:   NOTYPE    0 _ITM_registerTMCloneTable
+[ 75]:     FUNC    0 __cxa_finalize@@GLIBC_2.2.5
+[ 76]:     FUNC    0 _init
+[ 77]:   OBJECT    8 correct
+#+END_SRC
+
+* ls stripped
+Runs on a "stripped" version of the 'ls' program which means that the
+symbol table has been removed. Checks that showsym recognizes this and
+prints an appropriate error message.
+
+#+TESTY: program='./showsym test-input/ls'
+#+BEGIN_SRC text
+ERROR: Couldn't find symbol table
+#+END_SRC
+
+* warsim executable
+Runs on the executable 'warsim' executable which is a compiled C program with
+a large-ish symbol table.
+
+
+#+TESTY: program='./showsym test-input/warsim'
+#+BEGIN_SRC text
+Symbol Table
+- 26856 bytes offset from start of file
+- 2736 bytes total size
+- 24 bytes per entry
+- 114 entries
+[idx]      TYPE SIZE NAME
+[  0]:   NOTYPE    0 <NONE>
+[  1]:  SECTION    0 <NONE>
+[  2]:  SECTION    0 <NONE>
+[  3]:  SECTION    0 <NONE>
+[  4]:  SECTION    0 <NONE>
+[  5]:  SECTION    0 <NONE>
+[  6]:  SECTION    0 <NONE>
+[  7]:  SECTION    0 <NONE>
+[  8]:  SECTION    0 <NONE>
+[  9]:  SECTION    0 <NONE>
+[ 10]:  SECTION    0 <NONE>
+[ 11]:  SECTION    0 <NONE>
+[ 12]:  SECTION    0 <NONE>
+[ 13]:  SECTION    0 <NONE>
+[ 14]:  SECTION    0 <NONE>
+[ 15]:  SECTION    0 <NONE>
+[ 16]:  SECTION    0 <NONE>
+[ 17]:  SECTION    0 <NONE>
+[ 18]:  SECTION    0 <NONE>
+[ 19]:  SECTION    0 <NONE>
+[ 20]:  SECTION    0 <NONE>
+[ 21]:  SECTION    0 <NONE>
+[ 22]:  SECTION    0 <NONE>
+[ 23]:  SECTION    0 <NONE>
+[ 24]:  SECTION    0 <NONE>
+[ 25]:  SECTION    0 <NONE>
+[ 26]:  SECTION    0 <NONE>
+[ 27]:  SECTION    0 <NONE>
+[ 28]:  SECTION    0 <NONE>
+[ 29]:  SECTION    0 <NONE>
+[ 30]:  SECTION    0 <NONE>
+[ 31]:  SECTION    0 <NONE>
+[ 32]:     FILE    0 init.c
+[ 33]:     FILE    0 crtstuff.c
+[ 34]:     FUNC    0 deregister_tm_clones
+[ 35]:     FUNC    0 register_tm_clones
+[ 36]:     FUNC    0 __do_global_dtors_aux
+[ 37]:   OBJECT    1 completed.6973
+[ 38]:   OBJECT    0 __do_global_dtors_aux_fini_array_entry
+[ 39]:     FUNC    0 frame_dummy
+[ 40]:   OBJECT    0 __frame_dummy_init_array_entry
+[ 41]:     FILE    0 warsim.c
+[ 42]:     FILE    0 libwar.c
+[ 43]:     FILE    0 libcardlist.c
+[ 44]:     FILE    0 crtstuff.c
+[ 45]:   OBJECT    0 __FRAME_END__
+[ 46]:     FILE    0 <NONE>
+[ 47]:   NOTYPE    0 __init_array_end
+[ 48]:   OBJECT    0 _DYNAMIC
+[ 49]:   NOTYPE    0 __init_array_start
+[ 50]:   NOTYPE    0 __GNU_EH_FRAME_HDR
+[ 51]:   OBJECT    0 _GLOBAL_OFFSET_TABLE_
+[ 52]:     FUNC    2 __libc_csu_fini
+[ 53]:     FUNC   33 queue_front
+[ 54]:     FUNC   41 cardlist_error
+[ 55]:     FUNC   58 reverse
+[ 56]:     FUNC    0 free@@GLIBC_2.2.5
+[ 57]:     FUNC   42 card2str
+[ 58]:     FUNC   98 deal2
+[ 59]:     FUNC   36 stack_free
+[ 60]:     FUNC   11 queue_empty
+[ 61]:   NOTYPE    0 _ITM_deregisterTMCloneTable
+[ 62]:     FUNC   21 length
+[ 63]:   NOTYPE    0 data_start
+[ 64]:     FUNC   57 queue_copy
+[ 65]:     FUNC   33 stack_top
+[ 66]:     FUNC    0 __isoc99_fscanf@@GLIBC_2.7
+[ 67]:     FUNC    0 puts@@GLIBC_2.2.5
+[ 68]:   NOTYPE    0 _edata
+[ 69]:     FUNC  167 read_deck
+[ 70]:   OBJECT   16 stats
+[ 71]:     FUNC    0 fclose@@GLIBC_2.2.5
+[ 72]:     FUNC   26 new_stack
+[ 73]:     FUNC    0 _fini
+[ 74]:     FUNC  126 print_list
+[ 75]:     FUNC    0 __stack_chk_fail@@GLIBC_2.4
+[ 76]:     FUNC    0 printf@@GLIBC_2.2.5
+[ 77]:     FUNC   11 stack_empty
+[ 78]:     FUNC   43 queue_rotate
+[ 79]:     FUNC    0 fputc@@GLIBC_2.2.5
+[ 80]:     FUNC    0 __libc_start_main@@GLIBC_2.2.5
+[ 81]:   NOTYPE    0 __data_start
+[ 82]:     FUNC    0 fprintf@@GLIBC_2.2.5
+[ 83]:   NOTYPE    0 __gmon_start__
+[ 84]:     FUNC   34 new_queue
+[ 85]:     FUNC    0 strtol@@GLIBC_2.2.5
+[ 86]:   OBJECT    0 __dso_handle
+[ 87]:     FUNC  490 playwar
+[ 88]:   OBJECT    4 _IO_stdin_used
+[ 89]:     FUNC  101 __libc_csu_init
+[ 90]:     FUNC    0 malloc@@GLIBC_2.2.5
+[ 91]:     FUNC    0 __isoc99_sscanf@@GLIBC_2.7
+[ 92]:   NOTYPE    0 _end
+[ 93]:     FUNC   43 _start
+[ 94]:     FUNC  306 start_battle
+[ 95]:   NOTYPE    0 __bss_start
+[ 96]:     FUNC   69 str2card
+[ 97]:     FUNC  423 main
+[ 98]:     FUNC   66 list_copy
+[ 99]:     FUNC   73 queue_add
+[100]:     FUNC   32 queue_remove
+[101]:     FUNC  288 end_battle
+[102]:     FUNC    0 fopen@@GLIBC_2.2.5
+[103]:     FUNC   36 queue_free
+[104]:     FUNC   42 stack_push
+[105]:     FUNC    0 sprintf@@GLIBC_2.2.5
+[106]:     FUNC    0 exit@@GLIBC_2.2.5
+[107]:     FUNC    0 fwrite@@GLIBC_2.2.5
+[108]:   OBJECT    0 __TMC_END__
+[109]:   NOTYPE    0 _ITM_registerTMCloneTable
+[110]:     FUNC   32 stack_pop
+[111]:     FUNC    0 __cxa_finalize@@GLIBC_2.2.5
+[112]:     FUNC    0 _init
+[113]:   OBJECT    8 stderr@@GLIBC_2.2.5
+#+END_SRC
+
