@@ -9,9 +9,9 @@ Each project is organized into separate directories, and this README provides an
    - Project Description: Implementation of Malloc from scratch.
    - Programming Language: C.   
 
-2. **Project 2: [Project Name]**
-   - Description: Brief description of the project.
-   - Technologies Used: List of technologies, tools, or languages used.
-   - How to Run: Step-by-step instructions on how to run or deploy the project.
+2. **CS4061: [Introduction to Operating Systems]**
+   - Project Description: Use multithreading to create a producer thread to read the file and multiple consumer threads to process the smaller piece data.
+   - Programming Language: C.
+
 
 ... (Repeat for each project)
