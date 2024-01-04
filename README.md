@@ -20,3 +20,7 @@ Each project is organized into separate directories, and this README provides an
 4. **15640: Distributed Systems**
    - Project Description: Implement the Raft consensus algorithm from scratch.
    - Programming Language: Go.
+
+5. **11711: Advanced Natural Language Processing**
+   - Project Description: Name Entity Recognition.
+   - Programming Language: Python.
