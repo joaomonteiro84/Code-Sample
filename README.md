@@ -16,3 +16,7 @@ Each project is organized into separate directories, and this README provides an
 3. **16720: Computer Vision**
    - Project Description: Neural networks for recognition.
    - Programming Language: Python.
+
+4. **15640: Distributed Systems**
+   - Project Description: Implement the Raft consensus algorithm from scratch.
+   - Programming Language: Go.
