@@ -24,3 +24,8 @@ Each project is organized into separate directories, and this README provides an
 5. **11711: Advanced Natural Language Processing [Fall 2023]**
    - Project Description: Name Entity Recognition.
    - Programming Language: Python.
+6. **11777: Multimodal Machine Learning [Fall 2023]**
+   - Project Description: Multihop and multimodal question answering. In this group project, I wrote the code responsible to identify the image patches relevant to answer a question (patch selector) and also the attentive patching idea (idea 1) to generate answers.
+   - Programming Language: Python.
+   
+   
