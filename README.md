@@ -13,5 +13,6 @@ Each project is organized into separate directories, and this README provides an
    - Project Description: Use multithreading to create a producer thread to read the file and multiple consumer threads to process the smaller piece data.
    - Programming Language: C.
 
-
-... (Repeat for each project)
+3. **16720: [Computer Vision]**
+   - Project Description: Neural networks for recognition.
+   - Programming Language: Python.
