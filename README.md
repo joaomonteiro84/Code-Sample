@@ -1,6 +1,6 @@
 # Description
 
-This repository contains samples of code I developed for projects assigned in classes I took at the University of Minnesota and also at Carnegie Mellon University. 
+This repository contains samples of code I developed for projects/howework assigned in classes I took at the University of Minnesota and also at Carnegie Mellon University. 
 Each project is organized into separate directories, and this README provides an overview of each project.
 
 ## Projects
